@@ -1,0 +1,89 @@
+<!Doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Document</title>
+    <script src="main.js"></script>
+    <link rel="styleSheet" href="./stylinf.css">
+</head>
+
+<body class="">
+
+    <div class="container">
+        <header>
+            <div class="title"> PRODUCT LIST </div>
+            <div class="icon-cart">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312" />
+                </svg>
+                <span class="cartCount"></span>
+            </div>
+
+        </header>
+        <div class="listproduct">
+            <!-- <div class="item">
+                <img src="./photos/ArtbySterlingHundley.jpeg" alt="ArtbySterlingHundley">
+                <h2>NAME PRODUCT</h2>
+                <div class="price ">
+                    <span>$200 </span>
+                    <button class="addCart">
+                        Add To Cart
+                    </button>
+                </div>
+            </div> -->
+        </div>
+        <div class="cartTab ">
+            <h1>Shopping Cart</h1>
+            <div class="listCart">
+
+
+                <!-- <div class="item">
+                    <div class="image">
+                        <img src="./photos/ArtbySterlingHundley.jpeg" alt="ArtbySterlingHundley">
+                    </div>
+                    <div class="name">
+                        NAME
+                    </div>
+                    <div class="totalPrice">
+                        $200
+                    </div>
+                    <div class="quantity">
+                        <span class='minus'>'>'
+                        </span>
+                        <span>1</span>
+                        <span class="">'>'</span>
+
+                    </div> -->
+            </div>
+        </div>
+        <div class="btn">
+            <button class="close">CLOSE</button>
+            <button class="checkOut"> Check Out</button>
+        </div>
+    </div>
+    </div>
+    <div class="cart-overlay">
+        <div class="cart">
+            <div class="cart-header">
+                <h2>Shopping Cart</h2>
+                <button class="close-cart">&times;</button>
+            </div>
+
+            <div class="cart-items">
+                <!-- JS will insert items here -->
+            </div>
+
+            <div class="cart-footer">
+                <div class="total">Total: $<span id="cart-total">0</span></div>
+                <button class="checkout-btn">Checkout</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
