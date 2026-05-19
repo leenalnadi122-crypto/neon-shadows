@@ -1,217 +1,282 @@
-// --------- Auth State & Helpers ----------
-function redirectToLogin() {
-    window.location.href = "login.html";
-}
+const loader = document.createElement("div");
+loader.id = "loader";
+loader.innerHTML = `<div class="spinner"></div>`;
+document.body.appendChild(loader);
+loader.style.display = "none";
 
-function showLoginPopup() {
-    const popup = document.getElementById("loginPopup");
-    if (popup) popup.style.display = "flex";
-}
+function showLoader() { loader.style.display = "flex"; }
+function hideLoader() { loader.style.display = "none"; }
 
-function closePopup() {
-    const popup = document.getElementById("loginPopup");
-    if (popup) popup.style.display = "none";
-}
 
-// Check if user is logged in
-function checkAuth() {
-    if (!localStorage.getItem("isLogin")) {
-        showLoginPopup();
-        return false;
-    }
-    return true;
-}
+// const body = document.body;
+// const stars = document.createElement("div");
+// stars.className = "stars";
+// body.appendChild(stars);
 
-// --------- DOM Elements ----------
-const uploadForm = document.getElementById("uploadForm");
-const fileInput = document.getElementById("fileInput");
-const videoLink = document.getElementById("videoLink");
-const progressBar = document.getElementById("progressBar");
-const dropArea = document.getElementById("dropArea");
-const ButtonLogin = document.getElementById("btn-login");
-const ButtonLogOut = document.getElementById("btn-logout");
-const browseBtn = document.getElementById("browseBtn");
+// const moon = document.createElement("div");
+// moon.className = "moon";
+// moon.innerHTML = `<img src="moon.png/pngwing.com.png" width="100%" alt="">`;
+// body.appendChild(moon);
+// const header = document.createElement("div");
+// header.className = "header";
 
-// --------- Login/Logout Buttons ----------
-if (ButtonLogin && ButtonLogOut) {
-    if (!localStorage.getItem("isLogin")) {
-        ButtonLogin.style.display = "flex";
-        ButtonLogOut.style.display = "none";
-    } else {
-        ButtonLogin.style.display = "none";
-        ButtonLogOut.style.display = "flex";
-    }
+// const headerLogo = document.createElement("div");
+// const siteName = document.createElement("h1");
+// siteName.className = "site-name";
+// siteName.id = "site-name";
+// siteName.textContent = "Orbi";
 
-    ButtonLogOut.addEventListener("click", () => {
-        localStorage.removeItem("isLogin");
-        alert("You have been logged out 👋");
-        redirectToLogin();
+// headerLogo.className = "header-logo";
+// // Clear previous content
+// headerLogo.innerHTML = `
+//   <img src="moon.png/character.png.png" alt="Character" class="character" id="chatbot-icon">
+//   <h3 id="kids-btn">Kids Zone</h3>
+// `;
+
+// // Append the h1 element properly
+// headerLogo.insertBefore(siteName, headerLogo.querySelector("#kids-btn"))
+// header.appendChild(headerLogo);
+// // video
+// const div = document.createElement("div");
+// const video = document.createElement("video");
+// // احط الفيديو تاعي
+// video.src = "ssvid.net--JENNIE-제니-Like-Jennie-Color-Coded-Lyrics_360p";
+// video.controls = true;
+// video.width = 400;
+// div.style.display = "none";
+// div.appendChild(video);
+// document.body.appendChild(div);
+
+// siteName.addEventListener("click", () => {
+//     div.style.display = div.style.display === "none" ? "block" : "none";
+// });
+const body = document.body;
+
+// Stars
+const stars = document.createElement("div");
+stars.className = "stars";
+body.appendChild(stars);
+
+// Moon
+const moon = document.createElement("div");
+moon.className = "moon";
+moon.innerHTML = `<img src="moon.png/pngwing.com.png" width="100%" alt="">`;
+body.appendChild(moon);
+
+// Header
+const header = document.createElement("div");
+header.className = "header";
+
+// Header logo
+const headerLogo = document.createElement("div");
+headerLogo.className = "header-logo";
+
+// Add character image
+const characterImg = document.createElement("img");
+characterImg.src = "moon.png/character.png.png";
+characterImg.alt = "Character";
+characterImg.className = "character";
+characterImg.id = "chatbot-icon";
+headerLogo.appendChild(characterImg);
+
+// Add site name
+const siteName = document.createElement("h1");
+siteName.className = "site-name";
+siteName.id = "site-name";
+siteName.textContent = "Orbi";
+headerLogo.appendChild(siteName);
+
+// Add Kids Zone
+const kidsBtn = document.createElement("h3");
+kidsBtn.id = "kids-btn";
+kidsBtn.textContent = "Kids Zone";
+headerLogo.appendChild(kidsBtn);
+
+// Append headerLogo to header
+header.appendChild(headerLogo);
+body.appendChild(header);
+
+
+const headerSearch = document.createElement("div");
+headerSearch.className = "header-search";
+headerSearch.innerHTML = `
+<form id="nasaForm">
+  <div class="search">
+    <span class="search-icon material-symbols-outlined">search</span>
+    <input class="search-input" type="search" placeholder="Search NASA resources..." id="nasaQuery">
+  </div>
+</form>`;
+header.appendChild(headerSearch);
+
+body.appendChild(header);
+
+
+const content = document.createElement("div");
+content.className = "content";
+content.innerHTML = `
+<h2>Welcome to Space AI — an interactive platform where science meets imagination.</h2>
+<h5>Explore the fascinating world of space biology through stories, visuals, and discoveries.
+With our AI-powered guide, you can search, learn, and connect the dots of humanity’s journey beyond Earth.
+</h5>`;
+body.appendChild(content);
+
+const searchResults = document.createElement("div");
+searchResults.id = "searchResults";
+searchResults.className = "search-results";
+searchResults.style.display = "none";
+searchResults.innerHTML = `
+<h2>Search Results</h2>
+<div class="results-container">
+  <div class="cards" id="cards"></div>
+  <div class="summary" id="summary">
+      <h3>Summary</h3>
+  </div>
+</div>`;
+body.appendChild(searchResults);
+
+// -------------------- Chatbot --------------------
+const chatbotContainer = document.createElement("div");
+chatbotContainer.id = "chatbot-container";
+// chatbotContainer.className = "hidden";
+chatbotContainer.style.display = "none";
+chatbotContainer.innerHTML = `
+  <div id="chatbot-header">
+      <span>Orbi ChatBot</span>
+      <button id="close-btn">&times;</button>
+  </div>
+  <div id="chatbot-body">
+      <div id="chatbot-messages"></div>
+  </div>
+  <div id="chatbot-input-container">
+      <input type="text" id="chatbot-input" placeholder="Type a message...">
+      <button id="send-btn">Send</button>
+  </div>`;
+body.appendChild(chatbotContainer);
+
+document.addEventListener("DOMContentLoaded", function () {
+    const chatbotIcon = document.getElementById("chatbot-icon");
+    const closeBtn = document.getElementById("close-btn");
+    const sendBtn = document.getElementById("send-btn");
+    const chatbotInput = document.getElementById("chatbot-input");
+    const chatbotMessages = document.getElementById("chatbot-messages");
+
+
+    chatbotIcon.addEventListener("click", function () {
+        // chatbotContainer.classList.remove("hidden");
+        chatbotContainer.style.display = "flex";
     });
 
-}
 
-// --------- Upload Logic ----------
-if (browseBtn) {
-    browseBtn.addEventListener("click", () => {
-        fileInput.click(); // open file picker
+    closeBtn.addEventListener("click", function () {
+        // chatbotContainer.classList.add("hidden");
+        chatbotContainer.style.display = "none";
     });
-}
 
-if (uploadForm) {
-    uploadForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
 
-        if (!checkAuth()) return;
+    sendBtn.addEventListener("click", sendMessage);
+    chatbotInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") sendMessage();
+    });
 
-        let file = fileInput.files[0];
-        let link = videoLink.value;
+    function sendMessage() {
+        const userMessage = chatbotInput.value.trim();
+        if (userMessage) {
+            appendMessage("user", userMessage);
+            chatbotInput.value = "";
+            getBotResponse(userMessage);
+        }
+    }
 
-        if (!file && !link) {
-            alert("Please upload a file or paste a link 🎥");
+    function appendMessage(sender, message) {
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message", sender);
+        messageElement.textContent = message;
+        chatbotMessages.appendChild(messageElement);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    async function getBotResponse(userMessage) {
+        const apiKey = "AIzaSyDVVRArcW4eNkETxUns9ZK6SYm-eIkLAAc";
+        const apiUrl = "https://api.openai.com/v1/chat/completions";
+
+        try {
+            // Call your Node backend instead of Google API directly
+            const response = await fetch("http://localhost:3000/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            const data = await response.json();
+            const botMessage = data.message; // Node backend returns { message: "..."}
+            appendMessage("bot", botMessage);
+        } catch (error) {
+            console.error("Error fetching bot response:", error);
+            appendMessage("bot", "⚠️ Sorry, something went wrong.");
+        }
+    }
+});
+
+
+const form = document.getElementById("nasaForm");
+const input = document.getElementById("nasaQuery");
+const cardsDiv = document.getElementById("cards");
+const summaryDiv = document.getElementById("summary");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const query = input.value.trim();
+    if (!query) return;
+
+    input.value = "";
+    input.focus();
+
+    moon.style.display = "none";
+    content.style.display = "none";
+    headerLogo.style.display = "none";
+
+    searchResults.style.display = "block";
+
+    cardsDiv.innerHTML = "";
+    summaryDiv.innerHTML = "<h3>Summary</h3>";
+
+    const url = `https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}`;
+    try {
+        showLoader();
+        const response = await fetch(url);
+        const data = await response.json();
+        const items = data.collection.items;
+
+        if (!items || items.length === 0) {
+            cardsDiv.innerHTML = "<p>No results found.</p>";
             return;
         }
 
-        try {
-            let videoUrl = link;
+        items.slice(0, 6).forEach(item => {
+            const info = item.data[0];
+            const img = item.links && item.links[0] ? item.links[0].href : "";
 
-            // 🔹 If user uploaded a file, create an Object URL (not base64)
-            if (file) {
-                videoUrl = URL.createObjectURL(file);
-            }
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `${img ? `<img src="${img}" alt="${info.title}">` : ""}<h4>${info.title}</h4>`;
+            cardsDiv.appendChild(card);
 
-            // Fake keywords + timeline
-            const fakeKeywords = ["Cybersecurity", "Malware", "Encryption", "Authentication", "Vulnerabilities"];
-            const fakeTimeline = [{ time: "00:00", desc: "Video start" }, { time: "1:00", desc: "What is Cybersecurity" }, { time: "3:00", desc: "Video End" }];
-
-            // 🔹 Save only metadata, not the actual file
-            saveVideo({
-                url: videoUrl,
-                name: file ? file.name : "Video Link",
-                keywords: fakeKeywords,
-                timeline: fakeTimeline,
-                uploadedAt: new Date().toISOString()
-            });
-
-            // Update UI
-            document.getElementById("finalVideo").src = videoUrl;
-            renderKeywords(fakeKeywords);
-            renderTimeline(fakeTimeline);
-
-            document.getElementById("result").scrollIntoView({ behavior: "smooth" });
-
-            loadSavedVideos();
-
-        } catch (err) {
-            console.error(err);
-            alert("Something went wrong while saving!");
-        }
-    });
-}
-
-
-
-// --------- Drag & Drop ----------
-if (dropArea) {
-    dropArea.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        dropArea.style.background = "#f3eaff";
-    });
-
-    dropArea.addEventListener("dragleave", () => {
-        dropArea.style.background = "#faf8ff";
-    });
-
-    dropArea.addEventListener("drop", (e) => {
-        e.preventDefault();
-        fileInput.files = e.dataTransfer.files;
-        dropArea.style.background = "#faf8ff";
-    });
-}
-
-// --------- Save / Load Videos ----------
-function saveVideo(videoData) {
-    let savedVideos = JSON.parse(localStorage.getItem("videos")) || [];
-    savedVideos.push(videoData);
-    localStorage.setItem("videos", JSON.stringify(savedVideos));
-}
-
-function loadSavedVideos() {
-    let savedVideos = JSON.parse(localStorage.getItem("videos")) || [];
-    const list = document.querySelector(".saved-videos");
-    if (!list) return;
-
-    list.innerHTML = "";
-    savedVideos.forEach((video, index) => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-            <a href="${video.url}" target="_blank">Video ${index + 1}</a>
-            <small> (${new Date(video.uploadedAt).toLocaleString()})</small>
-        `;
-        list.appendChild(li);
-    });
-}
-
-document.addEventListener("DOMContentLoaded", loadSavedVideos);
-
-// --------- Rendering Results ----------
-function renderKeywords(keywords = []) {
-    const list = document.querySelector(".keywords ul");
-    if (!list) return;
-    list.innerHTML = "";
-    keywords.slice(0, 5).forEach((kw) => {
-        const li = document.createElement("li");
-        li.textContent = `#${kw}`;
-        list.appendChild(li);
-    });
-}
-
-function renderTimeline(timeline = []) {
-    const list = document.querySelector(".timeline ul");
-    if (!list) return;
-    list.innerHTML = "";
-    timeline.forEach((item) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<span>${item.time}</span> – ${item.label}`;
-        list.appendChild(li);
-    });
-}
-document.getElementById("uploadForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    let formData = new FormData();
-    const fileInput = document.getElementById("fileInput");
-    const videoLink = document.getElementById("videoLink").value;
-
-    if (fileInput.files.length > 0) {
-        formData.append("video", fileInput.files[0]);
-    } else if (videoLink) {
-        formData.append("video_url", videoLink);
-    }
-
-    try {
-        const response = await fetch("http://localhost:5000/summarize", {
-            method: "POST",
-            body: formData
+            const summaryItem = document.createElement("div");
+            summaryItem.className = "summary-item";
+            summaryItem.innerHTML = `<strong>${info.title}</strong><br>${info.description ? info.description.slice(0, 120) + "..." : "No description"}`;
+            summaryDiv.appendChild(summaryItem);
         });
 
-        const data = await response.json();
-        console.log("Response from backend:", data);
-
-        if (data.summary_result) {
-            // مثال: خلي النتيجة تظهر
-            document.querySelector("#result .keywords ul").innerHTML = "";
-            document.querySelector("#result .timeline ul").innerHTML = "";
-
-            // ببساطة رح تعرض النص كامل
-            document.querySelector("#result .keywords").innerHTML = "<h2>AI Summary</h2><p>" + data.summary_result + "</p>";
-
-            // scroll للنتيجة
-            document.getElementById("result").scrollIntoView({ behavior: "smooth" });
-        } else {
-            alert("Error: " + JSON.stringify(data));
-        }
     } catch (err) {
-        console.error("Error:", err);
-        alert("Something went wrong, check console.");
+        console.error(err);
+        cardsDiv.innerHTML = "<p>Something went wrong...</p>";
+    } finally {
+        hideLoader();
     }
 });
+document.getElementById("kids-btn").addEventListener("click", () => {
+    window.open("game.html", "_blank");
+});
+
