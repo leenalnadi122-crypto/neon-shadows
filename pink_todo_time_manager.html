@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>منظّم الأهداف والوقت — وردي بارد</title>
+    <style>
+        /* ====== نمط عام / تصميم وردي بارد ====== */
+        :root {
+            --pink-50: #fff7fb;
+            --pink-100: #fde8f2;
+            --pink-200: #f7cfe0;
+            --pink-300: #f0a6cf;
+            --pink-400: #e87fb7;
+            --pink-500: #e0559a;
+            --green-50: #eef9f0;
+            --glass: rgba(255, 255, 255, 0.65);
+            --card-shadow: 0 6px 20px rgba(224, 76, 162, 0.12);
+            --radius: 16px;
+            font-family: 'Segoe UI', Tahoma, system-ui, Arial, sans-serif;
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(180deg, #fff8fb 0%, #fff0f6 40%, #fff7fb 100%);
+            color: #3b1f2b;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 18px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 26px;
+            color: var(--pink-500);
+            letter-spacing: 0.6px
+        }
+
+        .sub {
+            color: #a94f78;
+            opacity: 0.9;
+            font-size: 13px
+        }
+
+        /* بطاقة */
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.82));
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(232, 127, 168, 0.14);
+        }
+
+        /* اليمين: إضافة المهام والقائمة */
+        .add-row {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(224, 76, 162, 0.12);
+            background: rgba(255, 255, 255, 0.9);
+            outline: none;
+            font-size: 15px;
+        }
+
+        .btn {
+            background: var(--pink-500);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn.secondary {
+            background: var(--pink-200);
+            color: #6b2740
+        }
+
+        .btn.ghost {
+            background: transparent;
+            color: var(--pink-500);
+            border: 1px solid rgba(224, 76, 162, 0.12)
+        }
+
+        label.checkbox {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: rgba(255, 248, 250, 0.6);
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(224, 76, 162, 0.06);
+            font-size: 13px;
+            color: #5b2a41;
+        }
+
+        .tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(224, 76, 162, 0.06);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .task-title {
+            font-weight: 700
+        }
+
+        .task-meta {
+            font-size: 12px;
+            color: #9b5a78
+        }
+
+        .badge {
+            padding: 6px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        /* اليمين: الشريط الجانبي */
+        .sidebar .section {
+            margin-bottom: 14px
+        }
+
+        /* المؤقت */
+        .timer {
+            text-align: center;
+            padding: 12px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(240, 180, 210, 0.06), rgba(240, 200, 220, 0.03));
+            border: 1px solid rgba(224, 76, 162, 0.06);
+        }
+
+        .timer .title {
+            font-weight: 800;
+            color: var(--pink-600)
+        }
+
+        .timer .big {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 8px 0
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 8px
+        }
+
+        /* استبيان */
+        .survey .stars {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            align-items: center
+        }
+
+        .survey textarea {
+            width: 100%;
+            height: 72px;
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid rgba(224, 76, 162, 0.08);
+            resize: vertical
+        }
+
+        footer {
+            grid-column: 1/-1;
+            margin-top: 16px;
+            text-align: center;
+            color: #c7669c;
+            font-size: 13px
+        }
+
+        /* استجابة صغيرة */
+        @media(max-width:980px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding-bottom: 60px
+            }
+        }
+
+        /* صغير: لائحة المتبقي بنهاية اليوم */
+        .unfinished-list {
+            font-size: 14px;
+            color: #81405e;
+            margin-top: 8px
+        }
+
+        /* زر في اعلى */
+        .top-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>منظّم اليوم والمهام</h1>
+                <div class="sub">اليوم: <span id="dayName">—</span> — <span id="isoDate">—</span></div>
+            </div>
+            <div class="top-actions">
+                <button class="btn ghost" id="clearAll">مسح الكل</button>
+                <button class="btn secondary" id="endDayBtn">إنهاء اليوم & نقل المتبقي</button>
+            </div>
+        </header>
+
+        <!-- اليسار: إضافة ومهام اليوم -->
+        <main class="card" style="min-height:520px">
+            <form id="addForm" onsubmit="return false;">
+                <div class="add-row">
+                    <input type="text" id="taskTitle" placeholder="أضف هدف يومي..." />
+                    <label class="checkbox">
+                        <input type="checkbox" id="lessThanHour" checked />
+                        <span>أقل من ساعة</span>
+                    </label>
+                    <button class="btn" id="addBtn">أضف</button>
+                </div>
+            </form>
+
+            <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-weight:800; color:#8e3a5e">مهام اليوم</div>
+                <div style="color:#8e3a5e; font-size:13px">بقي غير مكتمل: <span id="incompleteCount">0</span></div>
+            </div>
+
+            <div class="tasks-list" id="tasksList">
+                <!-- عناصر المهام تظهر هنا -->
+            </div>
+
+            <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn ghost" id="exportBtn" title="نسخة احتياطية">حفظ نسخة (JSON)</button>
+                <button class="btn ghost" id="importBtn" title="استرجاع من JSON">استرجاع</button>
+            </div>
+        </main>
+
+        <!-- اليمين: شريط جانبي الاستبيان + المؤقت + ملخص اليوم -->
+        <aside class="card sidebar">
+            <div class="section survey">
+                <h3 style="margin:0; color:var(--pink-500); font-weight:800">استبيان: كيف استغلِيت وقتي اليوم؟</h3>
+                <div style="margin-top:8px; text-align:right;">
+                    <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center">
+                        <label><input type="radio" name="rate" value="excellent"> ممتاز</label>
+                        <label><input type="radio" name="rate" value="good"> جيد</label>
+                        <label><input type="radio" name="rate" value="ok"> متوسط</label>
+                        <label><input type="radio" name="rate" value="poor"> سيء</label>
+                    </div>
+                    <textarea id="surveyNotes" placeholder="ملاحظات صغيرة..."></textarea>
+                    <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+                        <button class="btn secondary" id="saveSurvey">حفظ الاستبيان</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section timer">
+                <div class="title">الجلسة الحالية</div>
+                <div style="height:8px"></div>
+                <div id="currentArea">
+                    <div style="color:#8b3f63; font-weight:800" id="currentTitle">لم يبدأ أي هدف بعد.</div>
+                    <div class="big" id="timerText">00:00</div>
+                    <div style="font-size:13px; color:#9b5a78" id="sessionInfo">—</div>
+
+                    <div class="controls">
+                        <button class="btn ghost" id="finishNowBtn" title="إنهاء المهمة الآن">إنهاء المهمة</button>
+                        <button class="btn ghost" id="endSessionBtn" title="إنهاء الجلسة الآن">إنهاء الجلسة</button>
+                    </div>
+                </div>
+
+                <div id="breakArea" style="display:none; margin-top:12px; text-align:center">
+                    <div style="font-weight:800; color:var(--pink-500)">استراحة</div>
+                    <div class="big" id="breakText">00:00</div>
+                    <div class="controls" style="margin-top:8px">
+                        <button class="btn secondary" id="skipBreak">تخطي الاستراحة</button>
+                        <button class="btn" id="continueSession">تابع الجلسة التالية</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h4 style="margin:0; color:var(--pink-500); font-weight:800">ملخص نهاية اليوم</h4>
+                <div class="unfinished-list" id="unfinishedList" style="margin-top:8px;">
+                    لا شيء — تمام! 🎉
+                </div>
+            </div>
+        </aside>
+
+        <footer>تصميم وردي بارد ومنظم ليومك ✨ — افتحي الملف في متصفحك وشغّليه فوراً</footer>
+    </div>
+
+    <script>
+        /***** Pink To Do & Time Manager — single file JS *****/
+        (function () {
+            // Arabic weekday names
+            const weekdayAr = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+
+            // date keys
+            function todayISO(date = new Date()) {
+                return date.toISOString().slice(0, 10); // YYYY-MM-DD
+            }
+            const TODAY = todayISO();
+            const LS_TASKS = 'ptm_tasks'; // global storage for tasks array
+            const LS_SURVEY_PREFIX = 'ptm_survey_'; // + date
+
+            // DOM
+            const dayNameEl = document.getElementById('dayName');
+            const isoDateEl = document.getElementById('isoDate');
+            const tasksListEl = document.getElementById('tasksList');
+            const incompleteCountEl = document.getElementById('incompleteCount');
+            const addBtn = document.getElementById('addBtn');
+            const addTitle = document.getElementById('taskTitle');
+            const lessThanHourChk = document.getElementById('lessThanHour');
+            const endDayBtn = document.getElementById('endDayBtn');
+            const clearAllBtn = document.getElementById('clearAll');
+
+            const currentTitle = document.getElementById('currentTitle');
+            const timerText = document.getElementById('timerText');
+            const sessionInfo = document.getElementById('sessionInfo');
+            const finishNowBtn = document.getElementById('finishNowBtn');
+            const endSessionBtn = document.getElementById('endSessionBtn');
+
+            const breakArea = document.getElementById('breakArea');
+            const breakText = document.getElementById('breakText');
+            const skipBreakBtn = document.getElementById('skipBreak');
+            const continueSessionBtn = document.getElementById('continueSession');
+
+            const unfinishedListEl = document.getElementById('unfinishedList');
+
+            const surveyNotes = document.getElementById('surveyNotes');
+            const saveSurveyBtn = document.getElementById('saveSurvey');
+            const rateRadios = document.getElementsByName('rate');
+
+            const exportBtn = document.getElementById('exportBtn');
+            const importBtn = document.getElementById('importBtn');
+
+            // in-memory state
+            let tasks = []; // array of task objects
+            // task: {id, title, lessThanHour (bool), sessionsTotal (int), sessionsDone (int), completed(bool), date: YYYY-MM-DD}
+            let current = null; // current task id
+            let secondsLeft = 0;
+            let timerInterval = null;
+
+            let onBreak = false;
+            let breakSeconds = 0;
+            let breakInterval = null;
+
+            // load from storage
+            function load() {
+                try {
+                    const raw = localStorage.getItem(LS_TASKS);
+                    tasks = raw ? JSON.parse(raw) : [];
+                } catch (e) {
+                    tasks = [];
+                }
+                // load today's survey
+                const surveyRaw = localStorage.getItem(LS_SURVEY_PREFIX + TODAY);
+                if (surveyRaw) {
+                    try {
+                        const s = JSON.parse(surveyRaw);
+                        surveyNotes.value = s.notes || '';
+                        if (s.rating) {
+                            for (const r of rateRadios) if (r.value === s.rating) r.checked = true;
+                        }
+                    } catch (e) { }
+                }
+                refreshUI();
+            }
+
+            // save tasks
+            function save() {
+                localStorage.setItem(LS_TASKS, JSON.stringify(tasks));
+            }
+
+            // utility: compute default sessions
+            function computeSessions(lessThanHour) {
+                // rules: <1h -> 1 session default (25 min). >=1h -> 2 sessions default (50 min each)
+                return lessThanHour ? 1 : 2;
+            }
+
+            // add task
+            function addTask() {
+                const title = addTitle.value.trim();
+                if (!title) return alert('اكتبي عنوان الهدف أولاً');
+                const less = !!lessThanHourChk.checked;
+                const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+                const t = {
+                    id, title, lessThanHour: less, sessionsTotal: computeSessions(less),
+                    sessionsDone: 0, completed: false, date: TODAY
+                };
+                tasks.unshift(t);
+                addTitle.value = '';
+                save();
+                refreshUI();
+            }
+
+            // render tasks list
+            function refreshUI() {
+                // day name
+                const d = new Date();
+                dayNameEl.textContent = weekdayAr[d.getDay()];
+                isoDateEl.textContent = TODAY;
+
+                // today's tasks
+                const todayTasks = tasks.filter(t => t.date === TODAY);
+                tasksListEl.innerHTML = '';
+                if (todayTasks.length === 0) {
+                    tasksListEl.innerHTML = `<div style="padding:12px; color:#99345f">ما في مهام لليوم — أضف أول هدفك ✨</div>`;
+                } else {
+                    todayTasks.forEach(t => {
+                        const div = document.createElement('div');
+                        div.className = 'task-item';
+                        div.innerHTML = `
+              <div style="flex:1">
+                <div class="task-title">${escapeHtml(t.title)}</div>
+                <div class="task-meta">${t.sessionsDone}/${t.sessionsTotal} جلسات • ${t.lessThanHour ? '&lt; 1 ساعة' : '&ge; 1 ساعة'}</div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end">
+                ${t.completed ? '<div class="badge" style="background:#e6fbf0;color:#11683c;border-radius:10px">مكتمل</div>' : `<button class="btn" data-action="start" data-id="${t.id}">بدّأ</button>`}
+                <div style="display:flex; gap:8px">
+                  <button class="btn ghost" data-action="edit" data-id="${t.id}">تعديل</button>
+                  <button class="btn ghost" data-action="delete" data-id="${t.id}">حذف</button>
+                </div>
+              </div>
+            `;
+                        tasksListEl.appendChild(div);
+                    });
+                }
+
+                // incomplete count
+                const incomplete = todayTasks.filter(t => !t.completed).length;
+                incompleteCountEl.textContent = incomplete;
+
+                // unfinished list (end of day summary)
+                const unfinished = todayTasks.filter(t => !t.completed);
+                if (unfinished.length === 0) {
+                    unfinishedListEl.innerHTML = 'لا شيء — تمام! 🎉';
+                } else {
+                    unfinishedListEl.innerHTML = '<ul style="padding-right:8px;margin:6px 0;">' +
+                        unfinished.map(x => `<li>${escapeHtml(x.title)} (${x.sessionsDone}/${x.sessionsTotal})</li>`).join('') +
+                        '</ul>';
+                }
+
+                // current session display
+                updateCurrentDisplay();
+            }
+
+            // helper escape
+            function escapeHtml(s) {
+                return s.replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]; });
+            }
+
+            // start a task (begin a session)
+            function startTaskById(id) {
+                if (current && !onBreak) {
+                    return alert('يوجد جلسة جارية الآن. أنهِها أو انتظر الاستراحة.');
+                }
+                const t = tasks.find(x => x.id === id);
+                if (!t) return alert('المهمة غير موجودة');
+                // determine session length
+                const sessionMinutes = t.lessThanHour ? 25 : 50;
+                current = t.id;
+                secondsLeft = sessionMinutes * 60;
+                onBreak = false;
+                stopAllTimers();
+                startTimer();
+                refreshUI();
+            }
+
+            // start timer (ticks every second)
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    if (secondsLeft > 0) {
+                        secondsLeft--;
+                        updateCurrentDisplay();
+                        if (secondsLeft === 0) {
+                            // session finished
+                            onSessionComplete();
+                        }
+                    } else {
+                        // nothing
+                    }
+                }, 1000);
+                updateCurrentDisplay();
+            }
+
+            function stopAllTimers() {
+                if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+                if (breakInterval) { clearInterval(breakInterval); breakInterval = null; }
+            }
+
+            // session finished -> update task, start break
+            function onSessionComplete() {
+                const t = tasks.find(x => x.id === current);
+                if (!t) { current = null; updateCurrentDisplay(); return; }
+                // increment sessionsDone (but not beyond total)
+                t.sessionsDone = Math.min(t.sessionsTotal, (t.sessionsDone || 0) + 1);
+                if (t.sessionsDone >= t.sessionsTotal) {
+                    t.completed = true;
+                }
+                save();
+
+                // prepare break
+                const bmin = t.lessThanHour ? 5 : 15;
+                breakSeconds = bmin * 60;
+                onBreak = true;
+                if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+                startBreakTimer();
+                refreshUI();
+            }
+
+            function startBreakTimer() {
+                if (breakInterval) clearInterval(breakInterval);
+                breakInterval = setInterval(() => {
+                    if (breakSeconds > 0) {
+                        breakSeconds--;
+                        updateBreakDisplay();
+                        if (breakSeconds === 0) {
+                            // break finished
+                            onBreak = false;
+                            clearInterval(breakInterval); breakInterval = null;
+                            // if task completed -> clear current, else keep current and allow continue
+                            const t = tasks.find(x => x.id === current);
+                            if (t && t.completed) {
+                                current = null;
+                            } else {
+                                // prepare next session automatically? we'll stop and let user press continue
+                            }
+                            refreshUI();
+                        }
+                    }
+                }, 1000);
+                updateBreakDisplay();
+            }
+
+            function updateCurrentDisplay() {
+                if (!current) { currentTitle.textContent = 'لم يبدأ أي هدف بعد.'; timerText.textContent = '00:00'; sessionInfo.textContent = '—'; breakArea.style.display = 'none'; return; }
+                const t = tasks.find(x => x.id === current);
+                if (!t) { current = null; updateCurrentDisplay(); return; }
+                currentTitle.textContent = t.title;
+                if (onBreak) {
+                    // hide current area timer and show break
+                    breakArea.style.display = 'block';
+                    document.getElementById('currentArea').style.display = 'none';
+                    updateBreakDisplay();
+                } else {
+                    breakArea.style.display = 'none';
+                    document.getElementById('currentArea').style.display = 'block';
+                    timerText.textContent = formatTime(secondsLeft);
+                    sessionInfo.textContent = `جلسة ${Math.min(t.sessionsDone + (secondsLeft === 0 ? 1 : 0), t.sessionsTotal)} / ${t.sessionsTotal}`;
+                }
+            }
+
+            function updateBreakDisplay() {
+                breakArea.style.display = onBreak ? 'block' : 'none';
+                document.getElementById('currentArea').style.display = onBreak ? 'none' : 'block';
+                breakText.textContent = formatTime(breakSeconds);
+                // when not onBreak ensure main timer area updated
+                if (!onBreak) updateCurrentDisplay();
+            }
+
+            function formatTime(s) {
+                const m = Math.floor(s / 60);
+                const sec = s % 60;
+                return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+            }
+
+            // finish task now
+            function finishTaskNow() {
+                if (!current) return alert('لا توجد مهمة جارية');
+                const t = tasks.find(x => x.id === current);
+                if (!t) return;
+                t.completed = true;
+                save();
+                current = null;
+                onBreak = false;
+                secondsLeft = 0;
+                stopAllTimers();
+                refreshUI();
+            }
+
+            // end session now (treat as session completed)
+            function endSessionNow() {
+                if (!current) return alert('لا توجد جلسة جارية');
+                secondsLeft = 0;
+                // allow next tick to handle completion logic
+            }
+
+            // skip break
+            function skipBreak() {
+                if (!onBreak) return;
+                breakSeconds = 0;
+                onBreak = false;
+                if (breakInterval) { clearInterval(breakInterval); breakInterval = null; }
+                // if task completed -> clear current else prepare next session but wait for user
+                const t = tasks.find(x => x.id === current);
+                if (t && t.completed) {
+                    current = null;
+                } else {
+                    // prepare next session time, but stop to let user click continue
+                    // we'll set secondsLeft to default for next session when Continue is clicked
+                }
+                refreshUI();
+            }
+
+            function continueSession() {
+                if (!current) return;
+                const t = tasks.find(x => x.id === current);
+                if (!t) { current = null; refreshUI(); return; }
+                if (t.completed) { current = null; refreshUI(); return; }
+                const sessionMinutes = t.lessThanHour ? 25 : 50;
+                secondsLeft = sessionMinutes * 60;
+                onBreak = false;
+                startTimer();
+                refreshUI();
+            }
+
+            // end of day: move unfinished tasks to next day
+            function endDayMove() {
+                const next = new Date();
+                next.setDate(next.getDate() + 1);
+                const nextISO = next.toISOString().slice(0, 10);
+                let moved = 0;
+                tasks = tasks.map(t => {
+                    if (t.date === TODAY && !t.completed) {
+                        moved++;
+                        return { ...t, date: nextISO };
+                    }
+                    return t;
+                });
+                save();
+                refreshUI();
+                alert(`نقَلْت ${moved} مهمة/مهام لليوم التالي (${nextISO}).`);
+            }
+
+            // export / import
+            function exportJSON() {
+                const data = JSON.stringify(tasks, null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = 'ptm_tasks.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+            function importJSON() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json,application/json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function (ev) {
+                        try {
+                            const parsed = JSON.parse(ev.target.result);
+                            if (!Array.isArray(parsed)) throw new Error('الملف غير صحيح');
+                            // basic validation: ensure objects have title and date
+                            for (const it of parsed) {
+                                if (!it.title || !it.date) throw new Error('هيكل البيانات غير صالح');
+                            }
+                            // merge (append)
+                            tasks = parsed.concat(tasks);
+                            save();
+                            refreshUI();
+                            alert('تم استيراد المهام.');
+                        } catch (err) {
+                            alert('فشل الاستيراد: ' + err.message);
+                        }
+                    }
+                    reader.readAsText(file);
+                };
+                input.click();
+            }
+
+            // editing & deleting tasks
+            function openEdit(id) {
+                const t = tasks.find(x => x.id === id);
+                if (!t) return;
+                const newTitle = prompt('عدّلي عنوان المهمة:', t.title);
+                if (newTitle === null) return;
+                t.title = newTitle.trim() || t.title;
+                // allow change lessThanHour and sessionsTotal with prompt
+                const less = confirm('هل المهمة أقل من ساعة؟ (موافقة = نعم)');
+                t.lessThanHour = less;
+                t.sessionsTotal = computeSessions(less);
+                save();
+                refreshUI();
+            }
+            function deleteTask(id) {
+                if (!confirm('أتحب تحذّف المهمة؟')) return;
+                tasks = tasks.filter(x => x.id !== id);
+                if (current === id) { current = null; stopAllTimers(); }
+                save();
+                refreshUI();
+            }
+
+            // survey save
+            function saveSurvey() {
+                const notes = surveyNotes.value.trim();
+                let rating = null;
+                for (const r of rateRadios) if (r.checked) rating = r.value;
+                const obj = { rating, notes, savedAt: new Date().toISOString() };
+                localStorage.setItem(LS_SURVEY_PREFIX + TODAY, JSON.stringify(obj));
+                alert('تم حفظ الاستبيان لليوم.');
+            }
+
+            // helper: bind events on dynamic buttons in tasks list
+            tasksListEl.addEventListener('click', function (e) {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                const action = btn.dataset.action;
+                const id = btn.dataset.id;
+                if (action === 'start') startTaskById(id);
+                else if (action === 'edit') openEdit(id);
+                else if (action === 'delete') deleteTask(id);
+            });
+
+            // other buttons
+            addBtn.addEventListener('click', addTask);
+            document.getElementById('addForm').addEventListener('submit', addTask);
+
+            finishNowBtn.addEventListener('click', finishTaskNow);
+            endSessionBtn.addEventListener('click', endSessionNow);
+
+            skipBreakBtn.addEventListener('click', skipBreak);
+            continueSessionBtn.addEventListener('click', continueSession);
+
+            endDayBtn.addEventListener('click', endDayMove);
+            clearAllBtn.addEventListener('click', function () {
+                if (!confirm('مسح كل المهام؟')) return;
+                tasks = []; current = null; stopAllTimers(); save(); refreshUI();
+            });
+
+            exportBtn.addEventListener('click', exportJSON);
+            importBtn.addEventListener('click', importJSON);
+
+            saveSurveyBtn.addEventListener('click', saveSurvey);
+
+            // initialize
+            load();
+
+            // small neat feature: auto-save on unload
+            window.addEventListener('beforeunload', () => { save(); });
+
+            // make sure UI shows current state every second (for clock ticks)
+            setInterval(() => { updateCurrentDisplay(); updateBreakDisplay(); }, 1000);
+
+            // end of IIFE
+        })();
+    </script>
+</body>
+
+</html>
