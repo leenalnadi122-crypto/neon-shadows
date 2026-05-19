@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="ar">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mission: Earth View — محطتك الفضائية</title>
+    <style>
+        /* ========== Reset & base ========== */
+        :root {
+            --bg: #0b0620;
+            --panel: #101027;
+            --accent: #7a4bff;
+            /* purple neon */
+            --accent-2: #23d1ff;
+            /* cyan */
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-2: rgba(255, 255, 255, 0.02);
+            --card-radius: 16px;
+            --text: #e9e7ff;
+            --muted: #bdb8d9;
+            --neon-shadow: 0 8px 30px rgba(122, 75, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(1000px 600px at 10% 10%, rgba(122, 75, 255, 0.08), transparent),
+                radial-gradient(800px 500px at 90% 80%, rgba(35, 209, 255, 0.04), transparent),
+                var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-y: scroll;
+        }
+
+        /* ========== Container ========== */
+        .wrap {
+            max-width: 1200px;
+            margin: 32px auto;
+            padding: 28px;
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 28px;
+        }
+
+        /* ========== Left: Main Adventure Column ========== */
+        .main {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border-radius: var(--card-radius);
+            padding: 22px;
+            box-shadow: var(--neon-shadow);
+            min-height: 80vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Landing Gate (Hero) */
+        .hero {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .hero .left {
+            flex: 1;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: 28px;
+            line-height: 1.05;
+            letter-spacing: 0.2px;
+        }
+
+        p.lead {
+            margin: 0 0 16px 0;
+            color: var(--muted);
+        }
+
+        .cta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--accent), #a266ff);
+            border: none;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(122, 75, 255, 0.14);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text);
+        }
+
+        /* Boarding pass small */
+        .boarding {
+            margin-top: 16px;
+            display: inline-grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .bp-ticket {
+            background: linear-gradient(180deg, var(--accent), rgba(122, 75, 255, 0.6));
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        /* Progress / Mission Map */
+        .mission {
+            margin-top: 22px;
+            display: flex;
+            gap: 18px;
+        }
+
+        .map {
+            flex: 1;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            height: 420px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Isometric-ish blocks (simplified stylized) */
+        .iso {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background:
+                linear-gradient(180deg, rgba(10, 8, 20, 0.8), rgba(10, 8, 20, 0.6));
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 12px;
+        }
+
+        .iso .tile {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+            border-radius: 12px;
+            padding: 10px;
+            height: calc((100% - 16px) / 3);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform .28s ease, box-shadow .28s ease;
+        }
+
+        .iso .tile:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .tile h3 {
+            margin: 0;
+            font-size: 15px
+        }
+
+        .tile p {
+            margin: 6px 0 0 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* Right column */
+        .side {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            min-height: 80px;
+        }
+
+        .progressbar {
+            height: 12px;
+            background: var(--glass-2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progressbar>i {
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transition: width .5s ease;
+        }
+
+        /* Stage detailed view (overlay) */
+        .stage-view {
+            position: absolute;
+            inset: 18px;
+            background: linear-gradient(180deg, rgba(8, 6, 20, 0.95), rgba(10, 10, 20, 0.9));
+            border-radius: 12px;
+            padding: 22px;
+            display: none;
+            gap: 16px;
+            z-index: 6;
+            box-shadow: 0 30px 80px rgba(2, 2, 10, 0.6);
+        }
+
+        .stage-view.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stage-content {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 16px;
+        }
+
+        .stage-left {
+            padding: 14px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
+            border-radius: 12px;
+            min-height: 240px;
+        }
+
+        .stage-right {
+            padding: 14px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent);
+            border-radius: 12px;
+            min-height: 240px;
+        }
+
+        /* City viewer placeholder */
+        .sat-photo {
+            height: 220px;
+            border-radius: 10px;
+            background: radial-gradient(circle at 30% 20%, rgba(122, 75, 255, 0.2), transparent 6%),
+                linear-gradient(180deg, #07102a, #0b1024);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+            color: var(--muted);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .sat-photo .fake-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(90deg, rgba(122, 75, 255, 0.07), rgba(35, 209, 255, 0.04));
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* Accessibility section highlights */
+        .access-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .access-item {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        /* Small screens */
+        @media (max-width:980px) {
+            .wrap {
+                grid-template-columns: 1fr;
+                padding: 16px;
+                gap: 14px;
+            }
+
+            .main {
+                min-height: unset;
+            }
+
+            .stage-content {
+                grid-template-columns: 1fr;
+            }
+
+            .map {
+                height: 360px;
+            }
+        }
+
+        /* tiny polish */
+        .muted {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .kbd {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text)
+        }
+
+        .close-x {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--muted)
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap" role="main">
+
+        <!-- LEFT: Main -->
+        <section class="main" aria-labelledby="main-title">
+            <!-- HERO -->
+            <div class="hero" id="hero">
+                <div class="left">
+                    <h1 id="main-title">Welcome to <span style="color:var(--accent)">Mission: Earth View</span></h1>
+                    <p class="lead">Step into a station-like adventure. Navigate stages, discover Earth from ISS images,
+                        learn how space tech helps people — and complete the mission.</p>
+
+                    <div class="cta">
+                        <button class="btn" id="enterBtn" aria-haspopup="dialog">🎟️ Enter the Mission</button>
+                        <button class="btn ghost" id="howBtn">? Mission Brief</button>
+                    </div>
+
+                    <div class="boarding" style="display:none" id="boardingPass">
+                        <div class="bp-ticket">BOARDING PASS</div>
+                        <div>
+                            <div style="font-weight:700">Explorer: <span id="bpName">—</span></div>
+                            <div class="muted">Mission: ISS — Earth View • Stage-based adventure</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- mini right visual (sci-fi window) -->
+                <div class="right" style="width:320px;">
+                    <div style="height:160px; border-radius:14px; background:
+          radial-gradient(300px 150px at 10% 30%, rgba(122,75,255,0.12), transparent),
+          linear-gradient(180deg,#060716,#091026);
+          border:1px solid rgba(255,255,255,0.02);
+          padding:14px; display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="font-weight:700">Orbit Window</div>
+                            <div class="kbd">T-0</div>
+                        </div>
+                        <div style="flex:1; display:flex; align-items:center; justify-content:center;">
+                            <!-- small decorative "planet" -->
+                            <svg width="84" height="84" viewBox="0 0 100 100" aria-hidden>
+                                <defs>
+                                    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0" stop-color="#7a4bff" />
+                                        <stop offset="1" stop-color="#23d1ff" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="50" cy="50" r="40" fill="url(#g1)" opacity="0.9"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MISSION / MAP -->
+            <div class="mission">
+                <div class="map" aria-label="Mission map">
+                    <div class="iso" id="isoMap" role="list">
+                        <div class="tile" data-stage="1" role="listitem" tabindex="0">
+                            <div>
+                                <h3>Explore Your City (ISS)</h3>
+                                <p>Enter your city — see a satellite preview from above.</p>
+                            </div>
+                            <div class="muted">Stage 1</div>
+                        </div>
+                        <div class="tile" data-stage="2" role="listitem" tabindex="0">
+                            <div>
+                                <h3>Natural Disasters</h3>
+                                <p>Watch how satellite images reveal storms, fires, floods.</p>
+                            </div>
+                            <div class="muted">Stage 2</div>
+                        </div>
+                        <div class="tile" data-stage="3" role="listitem" tabindex="0">
+                            <div>
+                                <h3>Space Medicine</h3>
+                                <p>How orbital research helps health and rehab.</p>
+                            </div>
+                            <div class="muted">Stage 3</div>
+                        </div>
+                        <div class="tile" data-stage="4" role="listitem" tabindex="0">
+                            <div>
+                                <h3>Training Underwater</h3>
+                                <p>See training clips & steps for neutral buoyancy.</p>
+                            </div>
+                            <div class="muted">Stage 4</div>
+                        </div>
+                        <div class="tile" data-stage="5" role="listitem" tabindex="0">
+                            <div>
+                                <h3>Accessibility & Inclusion</h3>
+                                <p>Designing training & data access for everyone.</p>
+                            </div>
+                            <div class="muted">Stage 5</div>
+                        </div>
+                        <div class="tile" data-stage="6" role="listitem" tabindex="0">
+                            <div>
+                                <h3>Fun: Your City From ISS</h3>
+                                <p>A little surprise for explorers who reach here.</p>
+                            </div>
+                            <div class="muted">Stage 6</div>
+                        </div>
+                    </div>
+
+                    <!-- Stage detail overlay -->
+                    <div class="stage-view" id="stageView" role="dialog" aria-modal="true" aria-hidden="true">
+                        <div class="stage-header">
+                            <div>
+                                <h2 id="stageTitle">Stage</h2>
+                                <div class="muted" id="stageSubtitle">—</div>
+                            </div>
+                            <div style="display:flex; gap:8px; align-items:center">
+                                <button class="close-x" id="closeStage">Close</button>
+                            </div>
+                        </div>
+
+                        <div class="stage-content">
+                            <div class="stage-left" id="stageLeft">
+                                <!-- dynamic content -->
+                                <div class="sat-photo" id="satPhoto">
+                                    <div class="fake-img" id="fakeImg">Satellite view placeholder</div>
+                                </div>
+
+                                <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+                                    <input id="cityInput" type="text" placeholder="Write your city (e.g. Amman)"
+                                        style="flex:1; padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); background:transparent; color:var(--text)" />
+                                    <button class="btn" id="showCity">Show</button>
+                                </div>
+
+                                <p class="muted" style="margin-top:10px">*This preview is a live simulation. Replace
+                                    with real ISS imagery using an API or dataset for production.</p>
+                            </div>
+
+                            <aside class="stage-right" id="stageRight">
+                                <!-- info box -->
+                                <div style="display:flex; flex-direction:column; gap:8px;">
+                                    <div style="font-weight:700" id="stageInfoTitle">Overview</div>
+                                    <div class="muted" id="stageInfo">Short summary about this stage appears here. You
+                                        can add video, steps, or accessible content.</div>
+
+                                    <div style="margin-top:10px; font-weight:700">Quick Actions</div>
+                                    <div style="display:flex; gap:8px; margin-top:8px;">
+                                        <button class="btn" id="action1">Save snapshot</button>
+                                        <button class="btn ghost" id="action2">Open dataset</button>
+                                    </div>
+
+                                    <div style="margin-top:12px; font-weight:700">Accessibility</div>
+                                    <div class="access-list" id="accessList">
+                                        <!-- injected list -->
+                                    </div>
+                                </div>
+                            </aside>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Right side column -->
+                <aside class="side" aria-label="controls and progress">
+                    <div class="panel">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <div style="font-weight:700">Mission Progress</div>
+                                <div class="muted" style="font-size:13px">Complete the stages to unlock the final view
+                                </div>
+                            </div>
+                            <div style="font-weight:700" id="progressCount">0 / 6</div>
+                        </div>
+                        <div style="margin-top:12px" class="progressbar" aria-hidden>
+                            <i id="progressBarInner" style="width:0%"></i>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div style="font-weight:700; margin-bottom:8px">Station Log / Brief</div>
+                        <div class="muted" style="font-size:13px">Use the tiles to explore. Hover and click to open each
+                            stage. Accessibility features are included in each stage.</div>
+                        <div style="margin-top:10px; display:flex; gap:8px;">
+                            <button class="btn ghost" id="btnAccessibility">Open Accessibility Summary</button>
+                            <button class="btn" id="btnTicket">Your Boarding Pass</button>
+                        </div>
+                    </div>
+
+                    <div class="panel" id="accessPanel" style="display:none">
+                        <div style="font-weight:700">Space for Everyone</div>
+                        <div class="muted" style="margin-top:8px">Short list of inclusion ideas used across stages:
+                        </div>
+                        <ul style="margin-top:8px; color:var(--muted); padding-left:18px">
+                            <li>Audio descriptions for satellite imagery</li>
+                            <li>Subtitled/ASL-ready training videos</li>
+                            <li>VR/AR tactile-friendly controls simulation</li>
+                            <li>Adaptive training steps (wheelchair + underwater)</li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+
+        </section>
+
+        <!-- RIGHT: smaller column (for future extra info) -->
+        <aside class="side" style="grid-column:auto / span 1;">
+            <div class="panel">
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <div style="font-weight:700">Mission Log</div>
+                    <div class="muted" style="font-size:13px" id="lastAction">—</div>
+                </div>
+                <div style="margin-top:10px;" id="logList">
+                    <div class="muted">No actions yet. Enter mission to begin.</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div style="font-weight:700">Team Tools</div>
+                <div class="muted" style="margin-top:8px">Quick items for presentation</div>
+                <div style="display:flex; gap:8px; margin-top:10px">
+                    <button class="btn ghost" id="downloadBrief">Download Brief</button>
+                    <button class="btn" id="exportSnapshot">Export Snapshot</button>
+                </div>
+            </div>
+
+            <div class="panel" aria-hidden>
+                <div style="font-weight:700">Design Notes</div>
+                <div class="muted" style="margin-top:8px">Style: isometric + glassmorphism + purple neon. Each tile =
+                    stage. Transitions animate like entering rooms.</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        /* ========== Simple app state ========== */
+        const state = {
+            visited: new Set(),
+            stages: {
+                1: { title: "Explore Your City (ISS)", subtitle: "See Earth from orbit", info: "Type your city name to preview a satellite-style view. Replace placeholder with ISS images API in production.", access: ["Audio descriptions for blind users", "High-contrast map overlays"] },
+                2: { title: "Natural Disasters", subtitle: "Monitor storms, fires, floods", info: "Satellite layers show before/after and highlight active areas. Use time-slider and annotations.", access: ["Text summaries for easy parsing", "Tactile-friendly visuals"] },
+                3: { title: "Space Medicine", subtitle: "Research in orbit that helps life on Earth", info: "Microgravity research helps rehab, bone loss studies and telemedicine methods.", access: ["Subtitled videos", "Simplified explainer audio"] },
+                4: { title: "Training Underwater", subtitle: "Neutral buoyancy training explained", info: "Show diving steps, safety checklist and sample clips.", access: ["Captions & step-by-step visual guides", "Adaptive equipment examples"] },
+                5: { title: "Accessibility & Inclusion", subtitle: "Designing for everyone", info: "Showcase how training & data access adapt for different abilities.", access: ["Assistive interfaces", "Multi-sensory demos"] },
+                6: { title: "Fun: Your City From ISS", subtitle: "A reward view", info: "A special rendered preview of your city tile — unlockable after visiting stages.", access: ["Shareable audio postcards", "Printable tactile map"] }
+            }
+        };
+
+        /* elements */
+        const tiles = document.querySelectorAll('.tile');
+        const stageView = document.getElementById('stageView');
+        const stageTitle = document.getElementById('stageTitle');
+        const stageSubtitle = document.getElementById('stageSubtitle');
+        const stageInfoTitle = document.getElementById('stageInfoTitle');
+        const stageInfo = document.getElementById('stageInfo');
+        const accessList = document.getElementById('accessList');
+        const closeStage = document.getElementById('closeStage');
+        const progressBarInner = document.getElementById('progressBarInner');
+        const progressCount = document.getElementById('progressCount');
+        const logList = document.getElementById('logList');
+        const lastAction = document.getElementById('lastAction');
+        const enterBtn = document.getElementById('enterBtn');
+        const boardingPass = document.getElementById('boardingPass');
+        const bpName = document.getElementById('bpName');
+        const btnTicket = document.getElementById('btnTicket');
+        const btnAccessibility = document.getElementById('btnAccessibility');
+        const accessPanel = document.getElementById('accessPanel');
+        const cityInput = document.getElementById('cityInput');
+        const showCity = document.getElementById('showCity');
+        const fakeImg = document.getElementById('fakeImg');
+        const stageLeft = document.getElementById('stageLeft');
+        const lastActionUpdate = (s) => {
+            const when = new Date().toLocaleTimeString();
+            lastAction.textContent = when;
+            const el = document.createElement('div');
+            el.style.padding = '8px 0';
+            el.innerHTML = `<div style="font-weight:700">${s}</div><div class="muted" style="font-size:12px">${when}</div>`;
+            logList.prepend(el);
+        };
+
+        /* tile handlers */
+        tiles.forEach(tile => {
+            tile.addEventListener('click', () => openStage(tile.dataset.stage));
+            tile.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openStage(tile.dataset.stage) });
+        });
+
+        function openStage(stageId) {
+            const st = state.stages[stageId];
+            if (!st) return;
+            stageTitle.textContent = `${st.title}`;
+            stageSubtitle.textContent = st.subtitle;
+            stageInfoTitle.textContent = st.title;
+            stageInfo.textContent = st.info;
+
+            // accessibility items
+            accessList.innerHTML = '';
+            st.access.forEach(a => {
+                const div = document.createElement('div');
+                div.className = 'access-item';
+                div.textContent = a;
+                accessList.appendChild(div);
+            });
+
+            // default placeholder visualization per stage
+            fakeImg.textContent = st.title;
+
+            // show overlay
+            stageView.classList.add('active');
+            stageView.setAttribute('aria-hidden', 'false');
+
+            // mark visited
+            state.visited.add(stageId);
+            updateProgress();
+            lastActionUpdate(`Opened: ${st.title}`);
+        }
+
+        /* close */
+        closeStage.addEventListener('click', closeStageView);
+        function closeStageView() {
+            stageView.classList.remove('active');
+            stageView.setAttribute('aria-hidden', 'true');
+        }
+
+        /* progress update */
+        function updateProgress() {
+            const total = Object.keys(state.stages).length;
+            const visited = state.visited.size;
+            const pct = Math.round((visited / total) * 100);
+            progressBarInner.style.width = pct + '%';
+            progressCount.textContent = `${visited} / ${total}`;
+        }
+
+        /* boarding pass and entry */
+        enterBtn.addEventListener('click', () => {
+            const name = prompt("Enter your explorer name (for boarding pass):", "Explorer");
+            bpName.textContent = name || 'Explorer';
+            boardingPass.style.display = 'inline-grid';
+            lastActionUpdate("Joined mission: " + (name || "Explorer"));
+            // small flourish: open stage 1 automatically
+            openStage(1);
+        });
+
+        /* show ticket quick btn */
+        btnTicket.addEventListener('click', () => {
+            boardingPass.style.display = (boardingPass.style.display === 'none' || boardingPass.style.display === '') ? 'inline-grid' : 'none';
+        });
+
+        /* accessibility panel toggle */
+        btnAccessibility.addEventListener('click', () => {
+            accessPanel.style.display = accessPanel.style.display === 'none' ? 'block' : 'none';
+        });
+
+        /* quick "show city" action - creates a placeholder "satellite image" */
+        showCity.addEventListener('click', () => {
+            const city = cityInput.value.trim();
+            if (!city) {
+                alert('اكتب اسم مدينتك (مثلاً: Amman)');
+                cityInput.focus();
+                return;
+            }
+            // generate a colorful placeholder image with city name
+            fakeImg.style.background = `linear-gradient(135deg, rgba(122,75,255,0.18), rgba(35,209,255,0.12))`;
+            fakeImg.textContent = `${city.toUpperCase()} — ISS View`;
+            lastActionUpdate(`Viewed city preview: ${city}`);
+            // automatically mark stage 6 visited when user uses city viewer
+            state.visited.add("6");
+            updateProgress();
+        });
+
+        /* action buttons (placeholders) */
+        document.getElementById('action1').addEventListener('click', () => {
+            alert('Snapshot saved locally (demo). In production, save to server or generate PNG.');
+            lastActionUpdate('Saved snapshot');
+        });
+        document.getElementById('action2').addEventListener('click', () => {
+            alert('Opening dataset (demo). Link your data sources here.');
+            lastActionUpdate('Opened dataset');
+        });
+
+        /* other small controls */
+        document.getElementById('howBtn').addEventListener('click', () => {
+            alert("Mission Brief:\\n1) Enter (boarding pass) 2) Explore tiles as stages 3) Use city viewer and accessibility items 4) Collect stages to unlock final reward.");
+        });
+        document.getElementById('downloadBrief').addEventListener('click', () => {
+            alert('Downloading mission brief (demo). Replace with actual file generation.');
+        });
+        document.getElementById('exportSnapshot').addEventListener('click', () => {
+            alert('Export snapshot (demo). You can capture DOM to canvas or request server-side export.');
+        });
+
+        /* keyboard: Escape to close overlay */
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeStageView();
+        });
+
+        /* initial small intro log */
+        lastActionUpdate('Welcome to Mission: Earth View — ready to begin.');
+        updateProgress();
+
+    </script>
+
+</body>
+
+</html>
